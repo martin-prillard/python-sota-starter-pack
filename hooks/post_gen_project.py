@@ -94,7 +94,7 @@ def main() -> None:
     print("\nNext steps:")
     print("1. cd {{ cookiecutter.project_slug }}")
     print("2. uv sync")
-    print("3. pre-commit install")
+    print("3. uv run pre-commit install")
     print("4. Start coding!")
 
 

@@ -112,7 +112,7 @@ def main() -> None:
         print(f"\nNext steps:")
         print(f"1. cd {project_slug}")
         print(f"2. uv sync")
-        print(f"3. pre-commit install")
+        print(f"3. uv run pre-commit install")
         print(f"4. Start coding!")
         
     except ImportError:

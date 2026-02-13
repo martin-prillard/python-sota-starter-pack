@@ -33,13 +33,15 @@ A modern, best-practice Python project template using Cookiecutter. This templat
 python generate.py
 ```
 
-Or use cookiecutter directly (all prompts will be shown):
+Or use cookiecutter directly (note: all fields will be prompted, press Enter to skip optional ones):
 
 ```bash
 uvx cookiecutter .
 ```
 
-**Prompts (conditional prompts only shown when relevant):**
+**Note:** When using `uvx cookiecutter .` directly, you'll be prompted for all fields. For conditional prompts (only showing relevant fields), use `python generate.py` instead.
+
+**Prompts (when using generate.py, conditional prompts only shown when relevant):**
 
 - **project_name**: Name of your project
 - **project_slug**: Project slug (auto-generated from name)

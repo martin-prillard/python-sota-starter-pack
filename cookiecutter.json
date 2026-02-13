@@ -12,8 +12,8 @@
   "pypi_token": "",
   "use_ci": "yes",
   "git_provider": "gitlab",
-  "gitlab_url": "https://gitlab.com",
-  "github_org": "your-org",
-  "gitlab_group": "your-group",
+  "gitlab_url": "",
+  "github_org": "",
+  "gitlab_group": "",
   "sonarqube_token": ""
 }
