@@ -21,16 +21,22 @@ uv sync
 
 ### Development Setup
 
-1. Install pre-commit hooks:
+1. Install dependencies including dev dependencies:
 
 ```bash
-pre-commit install
+uv sync --extra dev
 ```
 
-2. Run tests:
+2. Install pre-commit hooks:
 
 ```bash
-pytest
+uv run pre-commit install
+```
+
+3. Run tests:
+
+```bash
+uv run pytest
 ```
 
 3. Run linting:

@@ -68,14 +68,14 @@ uvx cookiecutter .
    cd <your-project-slug>
    ```
 
-2. Install dependencies with uv:
+2. Install dependencies with uv (including dev dependencies):
    ```bash
-   uv sync
+   uv sync --extra dev
    ```
 
 3. Install pre-commit hooks:
    ```bash
-   pre-commit install
+   uv run pre-commit install
    ```
 
 4. Run tests:
@@ -195,6 +195,46 @@ The GitLab CI/CD pipeline includes:
 5. Create merge request
 6. CI/CD pipeline runs automatically
 7. Merge after approval
+
+## Testing the Template
+
+The template includes end-to-end tests that verify each project type works correctly. To run the tests:
+
+1. Install template dependencies:
+   ```bash
+   uv sync --extra dev
+   ```
+
+2. Run all end-to-end tests:
+   ```bash
+   # Using uv
+   uv run pytest tests/test_e2e.py -v
+   ```
+
+3. Run tests for a specific project type:
+   ```bash
+   uv run pytest tests/test_e2e.py::TestLibraryProject -v
+   uv run pytest tests/test_e2e.py::TestFastAPIProject -v
+   uv run pytest tests/test_e2e.py::TestStreamlitProject -v
+   uv run pytest tests/test_e2e.py::TestDataScienceProject -v
+   ```
+
+4. Clean test artifacts manually (if needed):
+   ```bash
+   # Remove any test-* directories in the current folder
+   rm -rf test-library test-fastapi test-streamlit test-datascience
+   ```
+
+The end-to-end tests will:
+- Generate a project for each type (library, fastapi, streamlit, datascience)
+- Install dependencies using `uv sync --extra dev`
+- Install pre-commit hooks
+- Run pytest to verify tests pass
+- Run linting and type checking
+- Verify project-specific commands work (e.g., uvicorn for FastAPI, streamlit for Streamlit apps)
+- Build packages for library projects
+
+**Note:** Tests use temporary directories and clean up after themselves, but if tests are interrupted, you may need to manually clean up `test-*` directories.
 
 ## License
 

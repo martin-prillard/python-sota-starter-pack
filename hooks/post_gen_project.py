@@ -93,7 +93,7 @@ def main() -> None:
     print(f"✅ Project generated successfully as {project_type} type!")
     print("\nNext steps:")
     print("1. cd {{ cookiecutter.project_slug }}")
-    print("2. uv sync")
+    print("2. uv sync --extra dev")
     print("3. uv run pre-commit install")
     print("4. Start coding!")
 
