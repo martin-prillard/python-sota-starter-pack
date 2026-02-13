@@ -2,9 +2,9 @@
 
 import pytest
 {% if cookiecutter.project_type == "library" %}
-from {{ cookiecutter.project_slug }}.core import ExampleModel
+from {{ cookiecutter.project_slug|replace('-', '_') }}.core import ExampleModel
 {% else %}
-from {{ cookiecutter.project_slug }}.core import example_function
+from {{ cookiecutter.project_slug|replace('-', '_') }}.core import example_function
 {% endif %}
 
 
@@ -19,5 +19,5 @@ def test_example_model() -> None:
 def test_example_function() -> None:
     """Test example function."""
     result = example_function()
-    assert result == "Hello from {{ cookiecutter.project_slug }}"
+    assert result == "Hello from {{ cookiecutter.project_slug|replace('-', '_') }}"
 {% endif %}

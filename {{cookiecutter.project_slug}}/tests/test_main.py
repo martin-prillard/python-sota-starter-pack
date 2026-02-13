@@ -1,7 +1,7 @@
 """Tests for main module."""
 
 import pytest
-from {{ cookiecutter.project_slug }}.main import main
+from {{ cookiecutter.project_slug|replace('-', '_') }}.main import main
 
 
 def test_main() -> None:

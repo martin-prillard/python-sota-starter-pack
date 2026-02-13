@@ -18,7 +18,19 @@ def remove_file(filepath: str) -> None:
 def main() -> None:
     """Main post-generation cleanup."""
     project_type = "{{ cookiecutter.project_type }}"
+    project_slug = "{{ cookiecutter.project_slug }}"
     project_root = Path(".")
+    
+    # Normalize package directory name: convert hyphens to underscores for Python compatibility
+    # The package directory is created with project_slug (which may have hyphens),
+    # but Python imports require underscores
+    package_dir_old = project_root / "src" / project_slug
+    package_dir_new = project_root / "src" / project_slug.replace("-", "_")
+    
+    if package_dir_old.exists() and package_dir_old != package_dir_new:
+        # Rename the package directory to use underscores instead of hyphens
+        package_dir_old.rename(package_dir_new)
+        print(f"📦 Renamed package directory from '{project_slug}' to '{project_slug.replace('-', '_')}' for Python compatibility")
 
     # Validate project type
     valid_types = ["library", "fastapi", "streamlit", "datascience"]

@@ -16,5 +16,5 @@ class ExampleModel(BaseModel):
 {% else %}
 def example_function() -> str:
     """Example function."""
-    return "Hello from {{ cookiecutter.project_slug }}"
+    return "Hello from {{ cookiecutter.project_slug|replace('-', '_') }}"
 {% endif %}

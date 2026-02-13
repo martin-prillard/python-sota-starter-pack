@@ -1,7 +1,7 @@
 """Tests for Streamlit app models."""
 
 import pytest
-from {{ cookiecutter.project_slug }}.main import ExampleModel
+from {{ cookiecutter.project_slug|replace('-', '_') }}.main import ExampleModel
 
 
 def test_example_model() -> None:

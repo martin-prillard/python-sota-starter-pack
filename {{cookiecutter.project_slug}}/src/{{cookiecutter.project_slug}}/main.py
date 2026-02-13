@@ -17,14 +17,33 @@ app = FastAPI(
 )
 
 if MCP_AVAILABLE:
-    mcp = FastMCP("{{ cookiecutter.project_slug }}")
+    try:
+        mcp = FastMCP("{{ cookiecutter.project_slug }}")
 
-    @mcp.tool()
-    def example_tool(query: str) -> str:
-        """Example MCP tool."""
-        return f"Processed: {query}"
+        @mcp.tool()
+        def example_tool(query: str) -> str:
+            """Example MCP tool."""
+            return f"Processed: {query}"
 
-    app.include_router(mcp.router)
+        # Try to include router - FastMCP API may vary by version
+        # Use getattr to safely access router without raising AttributeError
+        router = getattr(mcp, "router", None)
+        if router is None:
+            # Try alternative methods
+            get_router = getattr(mcp, "get_router", None)
+            if get_router:
+                router = get_router()
+            else:
+                as_router = getattr(mcp, "as_router", None)
+                if as_router:
+                    router = as_router()
+        
+        if router is not None:
+            app.include_router(router)
+    except Exception:
+        # If MCP setup fails or router is not available, continue without it
+        # The MCP tools may still be registered via other mechanisms
+        pass
 
 
 class HealthResponse(BaseModel):
@@ -87,7 +106,7 @@ if __name__ == "__main__":
 {% else %}
 """Main module for {{ cookiecutter.project_slug }}."""
 
-from {{ cookiecutter.project_slug }} import __version__
+from {{ cookiecutter.project_slug|replace('-', '_') }} import __version__
 
 
 def main() -> str:

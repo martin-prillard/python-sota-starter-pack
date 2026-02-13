@@ -72,7 +72,7 @@ Repository = "https://github.com/{{ cookiecutter.github_org }}/{{ cookiecutter.p
 {% endif %}
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/{{ cookiecutter.project_slug }}"]
+packages = ["src/{{ cookiecutter.project_slug|replace('-', '_') }}"]
 
 [tool.hatch.envs.default]
 dependencies = [
@@ -82,7 +82,7 @@ dependencies = [
 
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
-test-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov={{ cookiecutter.project_slug }} --cov=tests {args:tests}"
+test-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov={{ cookiecutter.project_slug|replace('-', '_') }} --cov=tests {args:tests}"
 
 [tool.ruff]
 target-version = "py{{ cookiecutter.python_version.replace('.', '') }}"
@@ -166,7 +166,7 @@ python_functions = ["test_*"]
 addopts = [
     "--strict-markers",
     "--strict-config",
-    "--cov={{ cookiecutter.project_slug }}",
+    "--cov={{ cookiecutter.project_slug|replace('-', '_') }}",
     "--cov-report=term-missing",
     "--cov-report=html",
     "--cov-report=xml",
@@ -177,7 +177,7 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["{{ cookiecutter.project_slug }}"]
+source = ["{{ cookiecutter.project_slug|replace('-', '_') }}"]
 omit = [
     "*/tests/*",
     "*/test_*.py",
@@ -200,4 +200,4 @@ exclude_dirs = ["tests", ".venv", "venv", ".tox"]
 skips = ["B101", "B601"]
 
 [tool.ty]
-python_version = "{{ cookiecutter.python_version }}"
+# ty configuration - uses Python version from the environment automatically
