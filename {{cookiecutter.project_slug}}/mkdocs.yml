@@ -1,6 +1,10 @@
 site_name: {{ cookiecutter.project_name }}
 site_description: {{ cookiecutter.project_description }}
+{% if cookiecutter.git_provider == "gitlab" %}
 site_url: https://{{ cookiecutter.gitlab_url }}/{{ cookiecutter.gitlab_group }}/{{ cookiecutter.project_slug }}
+{% elif cookiecutter.git_provider == "github" %}
+site_url: https://{{ cookiecutter.github_org }}.github.io/{{ cookiecutter.project_slug }}
+{% endif %}
 
 theme:
   name: material

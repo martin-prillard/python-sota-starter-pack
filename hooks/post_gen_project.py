@@ -55,13 +55,25 @@ def main() -> None:
         remove_file("Dockerfile")
         remove_file(".dockerignore")
 
-    # Remove .gitlab-ci.yml if not using GitLab CI/CD
-    if "{{ cookiecutter.use_gitlab_ci }}" != "yes":
+    # Remove CI/CD files based on configuration
+    use_ci = "{{ cookiecutter.use_ci }}"
+    git_provider = "{{ cookiecutter.git_provider }}"
+    
+    if use_ci != "yes":
         remove_file(".gitlab-ci.yml")
+        remove_file(".github")
         remove_file("sonar-project.properties")
+    else:
+        # Remove GitLab CI if using GitHub
+        if git_provider == "github":
+            remove_file(".gitlab-ci.yml")
+            remove_file("sonar-project.properties")
+        # Remove GitHub workflows if using GitLab
+        elif git_provider == "gitlab":
+            remove_file(".github")
 
     # Update .gitlab-ci.yml to remove PyPI publishing if not needed
-    if "{{ cookiecutter.publish_to_pypi }}" != "yes" and "{{ cookiecutter.use_gitlab_ci }}" == "yes":
+    if "{{ cookiecutter.publish_to_pypi }}" != "yes" and use_ci == "yes" and git_provider == "gitlab":
         ci_file = project_root / ".gitlab-ci.yml"
         if ci_file.exists():
             content = ci_file.read_text()

@@ -1,4 +1,4 @@
-{% if cookiecutter.use_gitlab_ci == "yes" %}
+{% if cookiecutter.use_ci == "yes" and cookiecutter.git_provider == "gitlab" %}
 stages:
   - lint
   - test

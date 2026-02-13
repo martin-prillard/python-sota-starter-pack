@@ -107,10 +107,10 @@ This project uses:
 - **mkdocs**: Documentation generator
 {% endif %}
 
-{% if cookiecutter.use_gitlab_ci == "yes" %}
+{% if cookiecutter.use_ci == "yes" %}
 ## CI/CD
 
-This project includes GitLab CI/CD configuration for:
+This project includes {% if cookiecutter.git_provider == "gitlab" %}GitLab{% elif cookiecutter.git_provider == "github" %}GitHub Actions{% endif %} CI/CD configuration for:
 
 - Linting and formatting checks
 - Type checking
@@ -118,8 +118,8 @@ This project includes GitLab CI/CD configuration for:
 - Testing with coverage
 - {% if cookiecutter.publish_to_pypi == "yes" %}PyPI publishing{% endif %}
 - {% if cookiecutter.use_docker == "yes" %}Docker image building and publishing{% endif %}
-- {% if cookiecutter.project_type != "datascience" %}Documentation building and deployment (GitLab Pages){% endif %}
-- SonarQube analysis
+- {% if cookiecutter.project_type != "datascience" %}Documentation building and deployment{% if cookiecutter.git_provider == "gitlab" %} (GitLab Pages){% endif %}{% endif %}
+{% if cookiecutter.git_provider == "gitlab" %}- SonarQube analysis{% endif %}
 {% endif %}
 
 ## License

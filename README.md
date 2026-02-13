@@ -27,25 +27,37 @@ A modern, best-practice Python project template using Cookiecutter. This templat
 
 ### Generate a New Project
 
+**Recommended: Use the custom generator script for conditional prompts:**
+
+```bash
+python generate.py
+```
+
+Or use cookiecutter directly (all prompts will be shown):
+
 ```bash
 uvx cookiecutter .
 ```
 
-You'll be prompted for:
+**Prompts (conditional prompts only shown when relevant):**
 
 - **project_name**: Name of your project
+- **project_slug**: Project slug (auto-generated from name)
 - **project_description**: Brief description
 - **author_name**: Your name
 - **author_email**: Your email
-- **project_type**: Choose from `library`, `fastapi`, `streamlit`, or `datascience` (type exactly as shown)
+- **project_type**: Choose from `library`, `fastapi`, `streamlit`, or `datascience`
 - **python_version**: Python version (default: 3.12)
 - **use_docker**: Whether to include Docker support (yes/no)
 - **publish_to_pypi**: Whether to configure PyPI publishing (yes/no)
-- **pypi_username**: PyPI username (if publishing)
-- **pypi_token**: PyPI token (if publishing)
-- **gitlab_url**: Your GitLab instance URL
-- **gitlab_group**: Your GitLab group/namespace
-- **sonarqube_token**: SonarQube token (optional)
+  - **pypi_username**: PyPI username (only asked if publishing to PyPI)
+  - **pypi_token**: PyPI token (only asked if publishing to PyPI)
+- **use_ci**: Whether to configure CI/CD (yes/no)
+  - **git_provider**: Choose `gitlab` or `github` (only asked if using CI)
+  - **gitlab_url**: GitLab instance URL (only asked if using GitLab)
+  - **gitlab_group**: GitLab group/namespace (only asked if using GitLab)
+  - **github_org**: GitHub organization/username (only asked if using GitHub)
+  - **sonarqube_token**: SonarQube token (optional, only asked if using CI)
 
 ### After Generation
 

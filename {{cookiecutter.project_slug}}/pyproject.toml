@@ -54,16 +54,22 @@ dev = [
     "black>=24.10.0",
     "mypy>=1.11.0",
     "bandit>=1.7.9",
-    "ty>=0.1.0",
+    "ty>=0.0.16",
     "pre-commit>=3.8.0",
     "mkdocs>=1.6.0",
     "mkdocs-material>=9.5.0",
 ]
 
 [project.urls]
+{% if cookiecutter.git_provider == "gitlab" %}
 Homepage = "https://{{ cookiecutter.gitlab_url }}/{{ cookiecutter.gitlab_group }}/{{ cookiecutter.project_slug }}"
 Documentation = "https://{{ cookiecutter.gitlab_url }}/{{ cookiecutter.gitlab_group }}/{{ cookiecutter.project_slug }}/-/blob/main/README.md"
 Repository = "https://{{ cookiecutter.gitlab_url }}/{{ cookiecutter.gitlab_group }}/{{ cookiecutter.project_slug }}.git"
+{% elif cookiecutter.git_provider == "github" %}
+Homepage = "https://github.com/{{ cookiecutter.github_org }}/{{ cookiecutter.project_slug }}"
+Documentation = "https://github.com/{{ cookiecutter.github_org }}/{{ cookiecutter.project_slug }}/blob/main/README.md"
+Repository = "https://github.com/{{ cookiecutter.github_org }}/{{ cookiecutter.project_slug }}.git"
+{% endif %}
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/{{ cookiecutter.project_slug }}"]

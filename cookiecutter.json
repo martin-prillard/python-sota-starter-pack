@@ -10,8 +10,10 @@
   "publish_to_pypi": "no",
   "pypi_username": "",
   "pypi_token": "",
-  "use_gitlab_ci": "yes",
+  "use_ci": "yes",
+  "git_provider": "gitlab",
   "gitlab_url": "https://gitlab.com",
+  "github_org": "your-org",
   "gitlab_group": "your-group",
   "sonarqube_token": ""
 }
