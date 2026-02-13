@@ -1,0 +1,158 @@
+{% if cookiecutter.use_gitlab_ci == "yes" %}
+stages:
+  - lint
+  - test
+  - security
+  - build
+  - deploy
+
+variables:
+  PYTHON_VERSION: "{{ cookiecutter.python_version }}"
+
+cache:
+  paths:
+    - .venv
+
+before_script:
+  - python --version
+  - curl -LsSf https://astral.sh/uv/install.sh | sh
+  - export PATH="$HOME/.cargo/bin:$PATH"
+  - uv sync
+
+lint:
+  stage: lint
+  image: python:${PYTHON_VERSION}-slim
+  script:
+    - uv run ruff check .
+    - uv run ruff format --check .
+    - uv run ty check
+  only:
+    - merge_requests
+    - main
+    - develop
+
+test:
+  stage: test
+  image: python:${PYTHON_VERSION}-slim
+  script:
+    - uv run pytest --cov --cov-report=xml --cov-report=term
+  coverage: '/TOTAL.*\s+(\d+%)$/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+  only:
+    - merge_requests
+    - main
+    - develop
+
+security:
+  stage: security
+  image: python:${PYTHON_VERSION}-slim
+  script:
+    - uv run bandit -r src/ -f json -o bandit-report.json || true
+    - uv run bandit -r src/ -ll
+  artifacts:
+    reports:
+      sast: bandit-report.json
+  only:
+    - merge_requests
+    - main
+    - develop
+
+{% if cookiecutter.publish_to_pypi == "yes" %}
+build-package:
+  stage: build
+  image: python:${PYTHON_VERSION}-slim
+  script:
+    - uv tool install build twine
+    - uv run python -m build
+    - uv run twine check dist/*
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 week
+  only:
+    - tags
+
+publish-pypi:
+  stage: deploy
+  image: python:${PYTHON_VERSION}-slim
+  script:
+    - uv tool install twine
+    - uv run twine upload dist/* --username ${PYPI_USERNAME} --password ${PYPI_TOKEN}
+  only:
+    - tags
+  when: manual
+{% endif %}
+
+{% if cookiecutter.use_docker == "yes" %}
+build-docker:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG -t $CI_REGISTRY_IMAGE:latest .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    - docker push $CI_REGISTRY_IMAGE:latest
+  only:
+    - main
+    - develop
+    - tags
+{% endif %}
+
+{% if cookiecutter.project_type != "datascience" %}
+build-docs:
+  stage: build
+  image: python:${PYTHON_VERSION}-slim
+  script:
+    - uv run mkdocs build
+  artifacts:
+    paths:
+      - site/
+    expire_in: 1 week
+  only:
+    - main
+    - develop
+    - merge_requests
+
+pages:
+  stage: deploy
+  image: alpine:latest
+  dependencies:
+    - build-docs
+  script:
+    - mkdir -p public
+    - cp -r site/* public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
+    - develop
+{% endif %}
+
+sonarqube:
+  stage: test
+  image: sonarsource/sonar-scanner-cli:latest
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+    GIT_DEPTH: "0"
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script:
+    - sonar-scanner
+      -Dsonar.qualitygate.wait=true
+      -Dsonar.login=${SONARQUBE_TOKEN}
+  only:
+    - merge_requests
+    - main
+    - develop
+  allow_failure: true
+{% endif %}

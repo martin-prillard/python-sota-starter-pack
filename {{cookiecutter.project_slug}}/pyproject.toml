@@ -1,0 +1,197 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "{{ cookiecutter.project_slug }}"
+version = "0.1.0"
+description = "{{ cookiecutter.project_description }}"
+readme = "README.md"
+requires-python = ">={{ cookiecutter.python_version }}"
+license = {text = "MIT"}
+authors = [
+    {name = "{{ cookiecutter.author_name }}", email = "{{ cookiecutter.author_email }}"}
+]
+keywords = []
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: {{ cookiecutter.python_version }}",
+    "Programming Language :: Python :: 3",
+]
+
+dependencies = [
+{% if cookiecutter.project_type == "fastapi" %}
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "mcp[cli]>=1.0.0",
+    "fastmcp>=0.1.0",
+    "pydantic>=2.9.0",
+    "pydantic-settings>=2.6.0",
+{% elif cookiecutter.project_type == "streamlit" %}
+    "streamlit>=1.39.0",
+    "pydantic>=2.9.0",
+{% elif cookiecutter.project_type == "datascience" %}
+    "jupyterlab>=4.2.0",
+    "pandas>=2.2.0",
+    "numpy>=2.1.0",
+    "matplotlib>=3.9.0",
+    "scikit-learn>=1.5.0",
+    "pydantic>=2.9.0",
+{% else %}
+    "pydantic>=2.9.0",
+{% endif %}
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-cov>=5.0.0",
+    "pytest-asyncio>=0.24.0",
+    "coverage>=7.5.0",
+    "ruff>=0.6.0",
+    "black>=24.10.0",
+    "mypy>=1.11.0",
+    "bandit>=1.7.9",
+    "ty>=0.1.0",
+    "pre-commit>=3.8.0",
+    "mkdocs>=1.6.0",
+    "mkdocs-material>=9.5.0",
+]
+
+[project.urls]
+Homepage = "https://{{ cookiecutter.gitlab_url }}/{{ cookiecutter.gitlab_group }}/{{ cookiecutter.project_slug }}"
+Documentation = "https://{{ cookiecutter.gitlab_url }}/{{ cookiecutter.gitlab_group }}/{{ cookiecutter.project_slug }}/-/blob/main/README.md"
+Repository = "https://{{ cookiecutter.gitlab_url }}/{{ cookiecutter.gitlab_group }}/{{ cookiecutter.project_slug }}.git"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/{{ cookiecutter.project_slug }}"]
+
+[tool.hatch.envs.default]
+dependencies = [
+    "pytest>=8.3.0",
+    "pytest-cov>=5.0.0",
+]
+
+[tool.hatch.envs.default.scripts]
+test = "pytest {args:tests}"
+test-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov={{ cookiecutter.project_slug }} --cov=tests {args:tests}"
+
+[tool.ruff]
+target-version = "py{{ cookiecutter.python_version.replace('.', '') }}"
+line-length = 100
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "ARG", # flake8-unused-arguments
+    "SIM", # flake8-simplify
+    "TCH", # flake8-type-checking
+    "PIE", # flake8-pie
+    "PT",  # flake8-pytest-style
+    "RET", # flake8-return
+    "RUF", # Ruff-specific rules
+]
+ignore = [
+    "E501",  # line too long (handled by black)
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"tests/**/*" = ["ARG", "S101"]
+
+[tool.black]
+target-version = ["py{{ cookiecutter.python_version.replace('.', '') }}"]
+line-length = 100
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.ruff_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.mypy]
+python_version = "{{ cookiecutter.python_version }}"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+strict_equality = true
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--cov={{ cookiecutter.project_slug }}",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+]
+
+[tool.coverage.run]
+source = ["{{ cookiecutter.project_slug }}"]
+omit = [
+    "*/tests/*",
+    "*/test_*.py",
+    "*/__pycache__/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@abstractmethod",
+]
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv", "venv", ".tox"]
+skips = ["B101", "B601"]
+
+[tool.ty]
+python_version = "{{ cookiecutter.python_version }}"

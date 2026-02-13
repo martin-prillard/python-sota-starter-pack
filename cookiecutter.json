@@ -1,0 +1,17 @@
+{
+  "project_name": "My Project",
+  "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '-').replace('_', '-') }}",
+  "project_description": "A modern Python project",
+  "author_name": "Your Name",
+  "author_email": "your.email@example.com",
+  "project_type": "library",
+  "python_version": "3.12",
+  "use_docker": "yes",
+  "publish_to_pypi": "no",
+  "pypi_username": "",
+  "pypi_token": "",
+  "use_gitlab_ci": "yes",
+  "gitlab_url": "https://gitlab.com",
+  "gitlab_group": "your-group",
+  "sonarqube_token": ""
+}
