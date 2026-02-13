@@ -49,11 +49,25 @@ You'll be prompted for:
 
 ### After Generation
 
-```bash
-cd <your-project-slug>
-uv sync
-pre-commit install
-```
+1. Navigate to your project:
+   ```bash
+   cd <your-project-slug>
+   ```
+
+2. Install dependencies with uv:
+   ```bash
+   uv sync
+   ```
+
+3. Install pre-commit hooks:
+   ```bash
+   pre-commit install
+   ```
+
+4. Run tests:
+   ```bash
+   pytest
+   ```
 
 ## Project Types
 
@@ -62,8 +76,11 @@ pre-commit install
 A standard Python package ready for PyPI publishing:
 
 ```bash
-# Build
+# Build package
 python -m build
+
+# Run tests
+pytest
 
 # Publish (if configured)
 twine upload dist/*
@@ -74,8 +91,11 @@ twine upload dist/*
 Includes FastAPI with MCP endpoint support using FastMCP:
 
 ```bash
-# Run locally
+# Run development server
 uvicorn <project_slug>.main:app --reload
+
+# Access API docs
+# http://localhost:8000/docs
 ```
 
 ### Streamlit Webapp
@@ -83,8 +103,11 @@ uvicorn <project_slug>.main:app --reload
 Interactive web application:
 
 ```bash
-# Run locally
+# Run app
 streamlit run <project_slug>/main.py
+
+# Access app
+# http://localhost:8501
 ```
 
 ### Data Science Project
@@ -92,8 +115,11 @@ streamlit run <project_slug>/main.py
 Jupyter Lab based project with data science libraries:
 
 ```bash
-# Run locally
+# Start Jupyter Lab
 jupyter lab
+
+# Access Jupyter
+# http://localhost:8888
 ```
 
 ## Tools Included
@@ -110,6 +136,16 @@ jupyter lab
 - **mkdocs**: Documentation (library, fastapi, streamlit)
 - **Pydantic**: Data validation
 
+## Docker (if enabled)
+
+```bash
+# Build image
+docker build -t <project-slug>:latest .
+
+# Run container
+docker run -p 8000:8000 <project-slug>:latest
+```
+
 ## CI/CD Pipeline
 
 The GitLab CI/CD pipeline includes:
@@ -120,6 +156,31 @@ The GitLab CI/CD pipeline includes:
 - **Build**: Package/Docker image building
 - **Deploy**: PyPI publishing (if configured)
 - **Quality**: SonarQube analysis
+
+### CI/CD Setup
+
+1. Push to GitLab
+2. Configure CI/CD variables in GitLab:
+   - `PYPI_USERNAME` (if publishing to PyPI)
+   - `PYPI_TOKEN` (if publishing to PyPI)
+   - `SONARQUBE_TOKEN` (for SonarQube analysis)
+
+3. The pipeline will automatically:
+   - Lint and format code
+   - Run tests with coverage
+   - Scan for security issues
+   - Build Docker images (if enabled)
+   - Publish to PyPI (if configured)
+
+## Development Workflow
+
+1. Create a feature branch
+2. Make changes
+3. Pre-commit hooks will run automatically
+4. Commit and push
+5. Create merge request
+6. CI/CD pipeline runs automatically
+7. Merge after approval
 
 ## License
 
