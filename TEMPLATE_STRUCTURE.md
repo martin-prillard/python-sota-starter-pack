@@ -7,7 +7,6 @@ This document describes the structure of the Python SOTA Starter Pack cookiecutt
 - `cookiecutter.json` - Template configuration and variables
 - `README.md` - Main documentation
 - `QUICKSTART.md` - Quick start guide
-- `requirements.txt` - Dependencies for the template itself
 - `LICENSE` - MIT License
 - `.cookiecutterrc.example` - Example configuration file
 

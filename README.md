@@ -21,10 +21,6 @@ A modern, best-practice Python project template using Cookiecutter. This templat
 ## Prerequisites
 
 - Python 3.12+
-- [Cookiecutter](https://cookiecutter.readthedocs.io/) installed:
-  ```bash
-  pip install cookiecutter
-  ```
 - [uv](https://github.com/astral-sh/uv)
 
 ## Usage
@@ -32,7 +28,7 @@ A modern, best-practice Python project template using Cookiecutter. This templat
 ### Generate a New Project
 
 ```bash
-cookiecutter .
+uvx cookiecutter .
 ```
 
 You'll be prompted for:

@@ -2,14 +2,9 @@
 
 ## Installation
 
-1. Install cookiecutter (using pip, as it's a system tool):
+1. Generate a new project:
    ```bash
-   pip install cookiecutter
-   ```
-
-2. Generate a new project:
-   ```bash
-   cookiecutter .
+   uvx cookiecutter .
    ```
 
 ## Project Type Options
