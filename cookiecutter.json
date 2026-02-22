@@ -1,6 +1,7 @@
 {
   "project_name": "My Project",
   "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '-').replace('_', '-') }}",
+  "python_package_name": "{{ cookiecutter.project_slug.replace('-', '_') }}",
   "project_description": "A modern Python project",
   "author_name": "Your Name",
   "author_email": "your.email@example.com",

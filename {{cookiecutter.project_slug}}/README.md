@@ -42,21 +42,21 @@ uv run pytest
 3. Run linting:
 
 ```bash
-ruff check .
-ruff format .
+uv run ruff check .
+uv run ruff format .
 ```
 
 4. Run type checking:
 
 ```bash
-ty check
+uv run ty check
 ```
 
 {% if cookiecutter.project_type == "fastapi" %}
 ### Running the API
 
 ```bash
-uvicorn {{ cookiecutter.project_slug }}.main:app --reload
+uv run uvicorn {{ cookiecutter.project_slug }}.main:app --reload
 ```
 
 The API will be available at `http://localhost:8000`
@@ -65,7 +65,7 @@ API documentation at `http://localhost:8000/docs`
 ### Running the Streamlit App
 
 ```bash
-streamlit run {{ cookiecutter.project_slug }}/main.py
+uv run streamlit run {{ cookiecutter.project_slug }}/main.py
 ```
 
 The app will be available at `http://localhost:8501`
@@ -73,7 +73,7 @@ The app will be available at `http://localhost:8501`
 ### Running Jupyter Lab
 
 ```bash
-jupyter lab
+uv run jupyter lab
 ```
 
 Jupyter Lab will be available at `http://localhost:8888`

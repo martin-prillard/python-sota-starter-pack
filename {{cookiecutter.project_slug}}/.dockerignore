@@ -25,6 +25,5 @@ htmlcov
 .DS_Store
 tests
 docs
-*.md
 .gitlab-ci.yml
 .pre-commit-config.yaml

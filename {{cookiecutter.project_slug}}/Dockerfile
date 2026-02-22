@@ -6,7 +6,7 @@ WORKDIR /app
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 # Copy dependency files
-COPY pyproject.toml ./
+COPY pyproject.toml uv.lock README.md ./
 
 # Install dependencies
 RUN uv sync --frozen --no-dev
@@ -39,5 +39,5 @@ CMD ["streamlit", "run", "{{ cookiecutter.project_slug }}/main.py", "--server.po
 EXPOSE 8888
 CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]
 {% else %}
-CMD ["python", "-m", "{{ cookiecutter.project_slug }}"]
+CMD ["python", "-m", "{{ cookiecutter.python_package_name }}"]
 {% endif %}
