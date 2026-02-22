@@ -5,11 +5,16 @@ WORKDIR /app
 # Install uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
-# Copy dependency files
-COPY pyproject.toml uv.lock README.md ./
+# Copy dependency files and source code
+COPY pyproject.toml README.md ./
+COPY src/ ./src/
 
-# Install dependencies
-RUN uv sync --frozen --no-dev
+# Install dependencies and the package
+# Note: For reproducible builds, generate uv.lock first with `uv lock`
+# and then copy it: COPY uv.lock ./
+# Then use: uv sync --frozen --no-dev
+# For now, we use uv sync without --frozen for flexibility
+RUN uv sync --no-dev
 
 FROM python:{{ cookiecutter.python_version }}-slim
 
@@ -21,7 +26,7 @@ COPY --from=builder /usr/local/bin/uv /usr/local/bin/uv
 # Copy installed packages
 COPY --from=builder /app/.venv /app/.venv
 
-# Copy application code
+# Copy application code (already copied in builder, but copy again for clarity)
 COPY src/ ./src/
 COPY pyproject.toml ./
 
@@ -31,10 +36,10 @@ ENV PYTHONUNBUFFERED=1
 
 {% if cookiecutter.project_type == "fastapi" %}
 EXPOSE 8000
-CMD ["uvicorn", "{{ cookiecutter.project_slug }}.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "{{ cookiecutter.python_package_name }}.main:app", "--host", "0.0.0.0", "--port", "8000"]
 {% elif cookiecutter.project_type == "streamlit" %}
 EXPOSE 8501
-CMD ["streamlit", "run", "{{ cookiecutter.project_slug }}/main.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "{{ cookiecutter.python_package_name }}/main.py", "--server.port=8501", "--server.address=0.0.0.0"]
 {% elif cookiecutter.project_type == "datascience" %}
 EXPOSE 8888
 CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]
